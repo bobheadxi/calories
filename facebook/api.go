@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/bobheadxi/calories/config"
@@ -33,10 +34,25 @@ func New(config *config.EnvConfig) *API {
 	}
 }
 
-// SetHandlers : Sets API's handlers
-// Currently just Messages, could add more
-func (api *API) SetHandlers(messageHandler MessageHandler) {
-	api.MessageHandler = messageHandler
+// Handler : Listens for all HTTP requests and decides what to do with them
+func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
+	if req.Method == "GET" {
+		log.Println("Checking authentication")
+		query := req.URL.Query()
+		verifyToken := query.Get("hub.verify_token")
+		if verifyToken != api.Token {
+			rw.WriteHeader(http.StatusUnauthorized)
+			log.Println("Authentication failed")
+			return
+		}
+		rw.WriteHeader(http.StatusOK)
+		log.Println("Authentication success")
+		rw.Write([]byte(query.Get("hub.challenge")))
+	} else if req.Method == "POST" {
+		api.HandlePOST(rw, req)
+	} else {
+		rw.WriteHeader(http.StatusMethodNotAllowed)
+	}
 }
 
 // HandlePOST : works on all POST requests passed to the server
