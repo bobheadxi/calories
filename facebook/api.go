@@ -36,6 +36,7 @@ func New(config *config.EnvConfig) *API {
 
 // Handler : Listens for all HTTP requests and decides what to do with them
 func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
+	log.Println("Handler accepted Request")
 	if req.Method == "GET" {
 		log.Println("Checking authentication")
 		query := req.URL.Query()
@@ -49,14 +50,15 @@ func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
 		log.Println("Authentication success")
 		rw.Write([]byte(query.Get("hub.challenge")))
 	} else if req.Method == "POST" {
-		api.HandlePOST(rw, req)
+		api.handlePOST(rw, req)
 	} else {
 		rw.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
 
 // HandlePOST : works on all POST requests passed to the server
-func (api *API) HandlePOST(rw http.ResponseWriter, req *http.Request) {
+func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
+	log.Println("POST request received: ")
 	read, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return
@@ -72,6 +74,7 @@ func (api *API) HandlePOST(rw http.ResponseWriter, req *http.Request) {
 	for _, entry := range event.Entries {
 		for _, message := range entry.Messaging {
 			if message.Message != nil {
+				log.Print("type message")
 				// start goroutine to handle received message
 				if api.MessageHandler != nil {
 					go api.MessageHandler(entry.Event, message.MessageOpts, *message.Message)
