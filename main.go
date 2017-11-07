@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/bobheadxi/calories/bot"
 	"github.com/bobheadxi/calories/config"
 	"github.com/bobheadxi/calories/facebook"
 )
@@ -15,5 +16,6 @@ func main() {
 	}
 
 	api := facebook.New(config)
+	bot := bot.New(api)
 	http.HandleFunc("/webhook", api.Handler)
 }
