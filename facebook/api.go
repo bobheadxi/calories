@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/bobheadxi/calories/config"
@@ -40,28 +39,8 @@ func (api *API) SetHandlers(messageHandler MessageHandler) {
 	api.MessageHandler = messageHandler
 }
 
-// Handler : the main handler for the API service, receives all HTTP
-// requests and decides what to do with them
-func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
-	if req.Method == "GET" {
-		query := req.URL.Query()
-		verifyToken := query.Get("hub.verify_token")
-		if verifyToken == api.Token {
-			rw.WriteHeader(http.StatusOK)
-			log.Println("RET:", query.Get("hub.challenge"))
-			rw.Write([]byte(query.Get("hub.challenge")))
-		} else {
-			log.Println("GET Request Unauthorized")
-		}
-	} else if req.Method == "POST" {
-		api.handlePOST(rw, req)
-	} else {
-		rw.WriteHeader(http.StatusMethodNotAllowed)
-	}
-}
-
-// handlePOST : works on all POST requests passed to the server
-func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
+// HandlePOST : works on all POST requests passed to the server
+func (api *API) HandlePOST(rw http.ResponseWriter, req *http.Request) {
 	read, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return

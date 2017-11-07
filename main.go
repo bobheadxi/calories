@@ -9,6 +9,8 @@ import (
 	"github.com/bobheadxi/calories/facebook"
 )
 
+var b = &bot.Bot{}
+
 func main() {
 	config := config.GetenvConfig()
 	if config.Port == "" {
@@ -16,6 +18,6 @@ func main() {
 	}
 
 	api := facebook.New(config)
-	bot := bot.New(api)
-	http.HandleFunc("/webhook", api.Handler)
+	b.SetApi(api)
+	http.HandleFunc("/webhook", b.Handler)
 }
