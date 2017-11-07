@@ -6,7 +6,6 @@ import (
 
 	"github.com/bobheadxi/calories/config"
 	"github.com/bobheadxi/calories/facebook"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -16,6 +15,5 @@ func main() {
 	}
 
 	api := facebook.New(config)
-	router := gin.New()
 	http.HandleFunc("/webhook", api.Handler)
 }

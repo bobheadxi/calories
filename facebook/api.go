@@ -2,7 +2,6 @@ package facebook
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -23,31 +22,22 @@ type MessageHandler func(Event, MessageOpts, ReceivedMessage)
 // events are given to appropriate handlers
 type API struct {
 	PageID         string
-	VerifyToken    string
-	AccessToken    string
-	AppSecret      string
+	Token          string
 	MessageHandler MessageHandler
 }
 
 // New : Build a new instance of our Facebook API Handler
 func New(config *config.EnvConfig) *API {
 	return &API{
-		PageID:         config.PageID,
-		VerifyToken:    config.VerifyToken,
-		AccessToken:    config.AccessToken,
-		AppSecret:      config.AppSecret,
-		MessageHandler: TestMessageReceivedAndReply,
+		PageID: config.PageID,
+		Token:  config.Token,
 	}
 }
 
-// TestMessageReceivedAndReply : Test that bot receives messages and replies.
-// DEPRECATE ASAP - replace with Bot handlers or something
-func TestMessageReceivedAndReply(event Event, opts MessageOpts, msg ReceivedMessage) {
-	resp, err := SendTextMessage(opts.Sender.ID, fmt.Sprintf("Hello   , %s", msg.Text))
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Printf("%+v", opts)
+// SetHandlers : Sets API's handlers
+// Currently just Messages, could add more
+func (api *API) SetHandlers(messageHandler MessageHandler) {
+	api.MessageHandler = messageHandler
 }
 
 // Handler : the main handler for the API service, receives all HTTP
@@ -56,7 +46,7 @@ func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" {
 		query := req.URL.Query()
 		verifyToken := query.Get("hub.verify_token")
-		if verifyToken == api.VerifyToken {
+		if verifyToken == api.Token {
 			rw.WriteHeader(http.StatusOK)
 			log.Println("RET:", query.Get("hub.challenge"))
 			rw.Write([]byte(query.Get("hub.challenge")))
@@ -70,7 +60,7 @@ func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// handlePOSTt : works on all POST requests passed to the server
+// handlePOST : works on all POST requests passed to the server
 func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
 	read, err := ioutil.ReadAll(req.Body)
 	if err != nil {
@@ -105,7 +95,7 @@ func (api *API) makeRequest(method string, url string, body io.Reader) (*http.Re
 	}
 	req.Header.Set("Content-Type", "application/json")
 	query := req.URL.Query()
-	query.Set("access_token", api.AccessToken)
+	query.Set("access_token", api.Token)
 	req.URL.RawQuery = query.Encode()
 	return http.DefaultClient.Do(req)
 }
