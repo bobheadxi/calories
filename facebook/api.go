@@ -16,7 +16,7 @@ var (
 )
 
 // MessageHandler is called when a new message is received
-type MessageHandler func(Event, MessageOpts, ReceivedMessage)
+type MessageHandler func(Event, Sender, ReceivedMessage)
 
 // API is the main service which handles all callbacks from facebook,
 // events are given to appropriate handlers
@@ -75,7 +75,7 @@ func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
 			if message.Message != nil {
 				// start goroutine to handle received message
 				if api.MessageHandler != nil {
-					go api.MessageHandler(entry.Event, message.MessageOpts, *message.Message)
+					go api.MessageHandler(entry.Event, *message.Sender, *message.Message)
 				}
 			}
 		}

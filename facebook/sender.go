@@ -35,11 +35,11 @@ func (api *API) SendMessage(m Message) (*MessageResponse, error) {
 }
 
 //SendTextMessage : Send a simple text message to specified recipient
-func (api *API) SendTextMessage(recipient string, message string) (*MessageResponse, error) {
+func (api *API) SendTextMessage(recipientID string, message string) (*MessageResponse, error) {
 	return api.SendMessage(
 		Message{
 			Recipient: Recipient{
-				ID: recipient,
+				ID: recipientID,
 			},
 			Message: Package{
 				Text: message,
