@@ -58,7 +58,6 @@ func (api *API) Handler(rw http.ResponseWriter, req *http.Request) {
 
 // HandlePOST : works on all POST requests passed to the server
 func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
-	log.Println("POST request received: ")
 	read, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return
@@ -74,7 +73,6 @@ func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
 	for _, entry := range event.Entries {
 		for _, message := range entry.Messaging {
 			if message.Message != nil {
-				log.Print("type message")
 				// start goroutine to handle received message
 				if api.MessageHandler != nil {
 					go api.MessageHandler(entry.Event, message.MessageOpts, *message.Message)
