@@ -1,5 +1,7 @@
 {
   "name": "calories",
+    "description": "A Facebook messenger bot for all your calory-tracking needs",
+    "repository": "https://github.com/bobheadxi/calories",
   "scripts": {
   },
   "env": {
