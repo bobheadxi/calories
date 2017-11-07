@@ -1,6 +1,25 @@
 {
-    "name": "calories",
+  "name": "calories",
     "description": "A Facebook messenger bot for all your calory-tracking needs",
     "repository": "https://github.com/bobheadxi/calories",
-    "keywords": []
-  }
+  "scripts": {
+  },
+  "env": {
+    "FB_PAGE_ID": {
+      "required": true
+    },
+    "FB_TOKEN": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-go.git"
+    }
+  ]
+}
