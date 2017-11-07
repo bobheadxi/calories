@@ -19,7 +19,7 @@ func main() {
 	}
 
 	api := facebook.New(config)
-	b.API = api
+	b.SetApi(api)
 	http.HandleFunc("/webhook", b.API.Handler)
 	log.Fatal(http.ListenAndServe(":"+config.Port, nil))
 }

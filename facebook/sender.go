@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -31,6 +32,7 @@ func (api *API) SendMessage(m Message) (*MessageResponse, error) {
 	}
 	response := &MessageResponse{}
 	err = json.Unmarshal(read, response)
+	log.Print("Message delivery complete")
 	return response, err
 }
 
