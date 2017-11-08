@@ -1,15 +1,19 @@
+/*
+Package config contains functions and data types to get
+necessary parameters from outside the app.
+*/
 package config
 
 import "os"
 
-// EnvConfig contains all configuration stuff from the environment
+// EnvConfig : Holds the app's configuration variables
 type EnvConfig struct {
 	Port   string
 	Token  string
 	PageID string
 }
 
-// GetenvConfig gets all configuration stuff from the environment
+// GetenvConfig : Gets all configuration variables from ENV
 func GetenvConfig() *EnvConfig {
 	return &EnvConfig{
 		Port:   os.Getenv("PORT"),

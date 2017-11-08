@@ -2,15 +2,15 @@
 WIP
 
 ### Setup
-1. Make sure you have [Go installed](https://golang.org/doc/install)
-2. Clone the repository into `$GOPATH/src/bobheadxi`
+1. Make sure you have [Go](https://golang.org/doc/install) and the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli#download-and-install) installed
+2. Clone the repository into `$GOPATH/src/github.com/bobheadxi`
 3. If you aren't a repository collaborator, you will have to create your own Heroku instance:
 ```bash
 heroku create
 heroku config:set HEROKU_URI==your-heroku-uri
 ```
 4. Now you have to set up your Facebook app page. Create a Facebook page for your app at https://developers.facebook.com/apps/
-5. Click on "Messenger" under "Products". Generate a token under "Token Generation", and set up Webhook under "Webhooks". Use the URL of your Heroku server as your webhook URL (append "/webhook/" to the end)
+5. Click on "Messenger" under "Products". Generate a token under "Token Generation", and set up Webhook under "Webhooks". Use the URL of your Heroku server as your webhook URL (append `/webhook` to the end)
 6. Save your tokens as Config Variables on Heroku. These are required for the app to run.
 ```bash
 heroku config:set FB_PAGE_ID=your-page-id
