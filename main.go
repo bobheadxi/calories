@@ -7,6 +7,7 @@ import (
 	"github.com/bobheadxi/calories/bot"
 	"github.com/bobheadxi/calories/config"
 	"github.com/bobheadxi/calories/facebook"
+	"github.com/bobheadxi/calories/server"
 )
 
 var b = &bot.Bot{}
@@ -17,9 +18,13 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
+	// Start Postgres service
+	server := server.New(config)
+	b.Server = server
+
 	// Attach API instance to Bot
 	api := facebook.New(config)
-	b.SetAPI(api)
+	b.SetupAPI(api)
 
 	// Requests made to our /webhook endpont will be handled by API module
 	http.HandleFunc("/webhook", b.API.Handler)

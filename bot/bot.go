@@ -8,15 +8,18 @@ import (
 	"log"
 
 	"github.com/bobheadxi/calories/facebook"
+	"github.com/bobheadxi/calories/server"
 )
 
 // Bot : The Calories bot of the app.
 type Bot struct {
-	API *facebook.API
+	API    *facebook.API
+	Server *server.Server
 }
 
-// SetAPI : Assigns an instance of facebook.API to bot
-func (b *Bot) SetAPI(api *facebook.API) {
+// SetupAPI : Assigns an instance of facebook.API to bot and
+// sets up appropriate handlers in the API
+func (b *Bot) SetupAPI(api *facebook.API) {
 	b.API = api
 	b.API.MessageHandler = b.TestMessageReceivedAndReply
 }
