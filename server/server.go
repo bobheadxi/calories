@@ -35,3 +35,30 @@ func (s *Server) InsertDataExample(id string, content string) (int, error) {
 	}
 	return userid, nil
 }
+
+// GetUser : return a user from a Users table based on a given id
+func (s *Server) GetUser(id string) (*User, error) {
+	user := &User{}
+	sqlStatement := `
+	SELECT user_id, max_cal 
+	FROM users
+	WHERE user_id = $1`
+	row := s.db.QueryRow(sqlStatement, id)
+	err := row.Scan(&user.ID, &user.MaxCal)
+	if err != nil {
+		log.Print("Error finding a user: " + err.Error())
+		return nil, err
+	}
+	return user, nil
+}
+
+// GetEntries: return a row of entries from a Users table
+//   entries: fuser_id:bigserial
+//  		  item: string (char[256])
+//  		  time: bigint
+//  		  calories: bigint
+/*
+func (s *Server) GetEntries(id string) (*Entry[], error) {
+
+}
+*/
