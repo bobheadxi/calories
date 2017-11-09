@@ -6,6 +6,7 @@ package bot
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
@@ -45,6 +46,12 @@ func (b *Bot) TestMessageReceivedAndReply(event facebook.Event, sender facebook.
 		b.API.SendTextMessage(sender.ID, "Dang entry insertion failed")
 	}
 	b.API.SendTextMessage(sender.ID, "inserted entry")
+
+	user, err := b.Server.GetUser(sender.ID)
+	if err != nil {
+		b.API.SendTextMessage(sender.ID, "No user found")
+	}
+	b.API.SendTextMessage(sender.ID, "Your maxcal is "+strconv.Itoa(user.MaxCal))
 
 	log.Printf("Event: %+v", event)   // {ID:2066945410258565 Time:1510063491984}
 	log.Printf("Sender: %+v", sender) // {ID:1657077300989984}
