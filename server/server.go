@@ -35,3 +35,16 @@ func (s *Server) InsertDataExample(id string, content string) (int, error) {
 	}
 	return userid, nil
 }
+
+// AddUser : insert user into database
+func (s *Server) AddUser(user User) error {
+	sqlStatement := `  
+	INSERT INTO users (user_id, max_cal)  
+	VALUES ($1, $2)`
+	_, err := s.db.Exec(sqlStatement, user.ID, user.MaxCal)
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+	return nil
+}
