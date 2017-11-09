@@ -14,7 +14,7 @@ type User struct {
 // Entry : Describes an entry in our "Entries" table
 type Entry struct {
 	ID       string `json:"fuser_id"`
+	Time     int64  `json:"time"`
 	Item     string `json:"item"`
-	Time     string `json:"time"`
 	Calories int    `json:"calories"`
 }

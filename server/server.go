@@ -48,3 +48,16 @@ func (s *Server) AddUser(user User) error {
 	}
 	return nil
 }
+
+// AddEntry : add an entry to the database
+func (s *Server) AddEntry(entry Entry) error {
+	sqlStatement := `  
+	INSERT INTO entries (fuser_id, time, item, calories)  
+	VALUES ($1, $2, $3, $4)`
+	_, err := s.db.Exec(sqlStatement, entry.ID, entry.Time, entry.Item, entry.Calories)
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+	return nil
+}
