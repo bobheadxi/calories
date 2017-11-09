@@ -43,7 +43,7 @@ func (s *Server) AddUser(user User) error {
 	VALUES ($1, $2)`
 	_, err := s.db.Exec(sqlStatement, user.ID, user.MaxCal)
 	if err != nil {
-		log.Print(err)
+		log.Print("Error adding user: " + err.Error())
 		return err
 	}
 	return nil
@@ -56,7 +56,7 @@ func (s *Server) AddEntry(entry Entry) error {
 	VALUES ($1, $2, $3, $4)`
 	_, err := s.db.Exec(sqlStatement, entry.ID, entry.Time, entry.Item, entry.Calories)
 	if err != nil {
-		log.Print(err)
+		log.Print("Error adding entry: " + err.Error())
 		return err
 	}
 	return nil
