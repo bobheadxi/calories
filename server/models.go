@@ -11,10 +11,10 @@ type User struct {
 	MaxCal int    `json:"max_cal"`
 }
 
-// Entry : Describes an entry in our "Entries table"
+// Entry : Describes an entry in our "Entries" table
 type Entry struct {
-	ID       string `json:"f_user_id"`
+	ID       string `json:"fuser_id"`
+	Time     int64  `json:"time"`
 	Item     string `json:"item"`
-	Time     string `json:"time"`
 	Calories int    `json:"calories"`
 }
