@@ -30,10 +30,22 @@ func (b *Bot) TestMessageReceivedAndReply(event facebook.Event, sender facebook.
 	b.API.SendTextMessage(sender.ID, "Hello!")
 	output, err := b.Server.InsertDataExample(sender.ID, msg.Text)
 	if err != nil {
-		b.API.SendTextMessage(sender.ID, "Dang data insertion failed")
-		return
+		b.API.SendTextMessage(sender.ID, "Dang data insertion example failed")
 	}
 	b.API.SendTextMessage(sender.ID, string(output))
+
+	err = b.Server.AddUser(server.User{ID: sender.ID, MaxCal: 69})
+	if err != nil {
+		b.API.SendTextMessage(sender.ID, "Dang user insertion failed")
+	}
+	b.API.SendTextMessage(sender.ID, "inserted")
+
+	err = b.Server.AddEntry(server.Entry{ID: sender.ID, Time: event.Time, Item: msg.Text, Calories: 100})
+	if err != nil {
+		b.API.SendTextMessage(sender.ID, "Dang entry insertion failed")
+	}
+	b.API.SendTextMessage(sender.ID, "inserted entry")
+
 	log.Printf("Event: %+v", event)   // {ID:2066945410258565 Time:1510063491984}
 	log.Printf("Sender: %+v", sender) // {ID:1657077300989984}
 	log.Printf("Msg: %+v", msg)       // {ID:mid.$cAAcNE7mWyw1lyBGR51flsxJvj8_- Text:hello Seq:1028142}
