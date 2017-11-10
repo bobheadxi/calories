@@ -7,6 +7,7 @@ package bot
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
@@ -38,4 +39,9 @@ func (b *Bot) Run(port string) {
 // DEPRECATE ASAP - replace with Bot handlers or something
 func (b *Bot) TestMessageReceivedAndReply(event facebook.Event, sender facebook.Sender, msg facebook.ReceivedMessage) {
 	b.api.SendTextMessage(sender.ID, "Hello!")
+	response, err := b.server.SumCalories(sender.ID)
+	if err != nil {
+		log.Print("No calories for you" + err.Error())
+	}
+	b.api.SendTextMessage(sender.ID, "your total calories are "+strconv.Itoa(response))
 }
