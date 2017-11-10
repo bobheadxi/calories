@@ -53,6 +53,15 @@ func (b *Bot) TestMessageReceivedAndReply(event facebook.Event, sender facebook.
 	}
 	b.API.SendTextMessage(sender.ID, "Your maxcal is "+strconv.Itoa(user.MaxCal))
 
+	entries, err := b.Server.GetEntries(sender.ID)
+	if err != nil {
+		b.API.SendTextMessage(sender.ID, "No entries")
+	}
+	for _, entry := range *entries {
+		str := "One entry: " + entry.ID + "," + entry.Item + "," + strconv.FormatInt(entry.Time, 10) + "," + strconv.Itoa(entry.Calories)
+		b.API.SendTextMessage(sender.ID, str)
+	}
+
 	log.Printf("Event: %+v", event)   // {ID:2066945410258565 Time:1510063491984}
 	log.Printf("Sender: %+v", sender) // {ID:1657077300989984}
 	log.Printf("Msg: %+v", msg)       // {ID:mid.$cAAcNE7mWyw1lyBGR51flsxJvj8_- Text:hello Seq:1028142}

@@ -78,13 +78,26 @@ func (s *Server) GetUser(id string) (*User, error) {
 	return user, nil
 }
 
-// GetEntries: return a row of entries from a Users table
-//   entries: fuser_id:bigserial
-//  		  item: string (char[256])
-//  		  time: bigint
-//  		  calories: bigint
-/*
-func (s *Server) GetEntries(id string) (*Entry[], error) {
-
+// GetEntries : return a list of entries from a Users table
+func (s *Server) GetEntries(id string) (*[]Entry, error) {
+	l := []Entry{}
+	sqlStatement := `
+	SELECT fuser_id, item, time, calories
+	FROM entries
+	WHERE fuser_id = $1`
+	rows, err := s.db.Query(sqlStatement, id)
+	if err != nil {
+		log.Print("No such user in entries: " + err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		entry := Entry{}
+		err := rows.Scan(&entry.ID, &entry.Item, &entry.Time, &entry.Calories)
+		if err != nil {
+			break
+		}
+		l = append(l, entry)
+	}
+	return &l, nil
 }
-*/
