@@ -7,8 +7,10 @@ See descriptions in the wiki: https://github.com/bobheadxi/calories/wiki/Schemas
 
 // User : Describes an entry in our "Users" table
 type User struct {
-	ID     string `json:"user_id"`
-	MaxCal int    `json:"max_cal"`
+	ID       string `json:"user_id"`
+	MaxCal   int    `json:"max_cal"`
+	Timezone int    `json:"timezone"`
+	Name     string `json:"name"`
 }
 
 // Entry : Describes an entry in our "Entries" table
