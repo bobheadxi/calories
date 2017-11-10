@@ -6,6 +6,7 @@ package bot
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
@@ -13,40 +14,28 @@ import (
 
 // Bot : The Calories bot of the app.
 type Bot struct {
-	API    *facebook.API
-	Server *server.Server
+	api    *facebook.API
+	server *server.Server
 }
 
-// SetupAPI : Assigns an instance of facebook.API to bot and
-// sets up appropriate handlers in the API
-func (b *Bot) SetupAPI(api *facebook.API) {
-	b.API = api
-	b.API.MessageHandler = b.TestMessageReceivedAndReply
+// New : Sets up and returns a Bot
+func New(api *facebook.API, sv *server.Server) *Bot {
+	b := Bot{
+		api:    api,
+		server: sv,
+	}
+	b.api.MessageHandler = b.TestMessageReceivedAndReply
+	return &b
+}
+
+// Run : Spins up the Calories bot
+func (b *Bot) Run(port string) {
+	http.HandleFunc("/webhook", b.api.Handler)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 // TestMessageReceivedAndReply : Tests that bot receives messages and replies.
 // DEPRECATE ASAP - replace with Bot handlers or something
 func (b *Bot) TestMessageReceivedAndReply(event facebook.Event, sender facebook.Sender, msg facebook.ReceivedMessage) {
-	b.API.SendTextMessage(sender.ID, "Hello!")
-	output, err := b.Server.InsertDataExample(sender.ID, msg.Text)
-	if err != nil {
-		b.API.SendTextMessage(sender.ID, "Dang data insertion example failed")
-	}
-	b.API.SendTextMessage(sender.ID, string(output))
-
-	err = b.Server.AddUser(server.User{ID: sender.ID, MaxCal: 69})
-	if err != nil {
-		b.API.SendTextMessage(sender.ID, "Dang user insertion failed")
-	}
-	b.API.SendTextMessage(sender.ID, "inserted")
-
-	err = b.Server.AddEntry(server.Entry{ID: sender.ID, Time: event.Time, Item: msg.Text, Calories: 100})
-	if err != nil {
-		b.API.SendTextMessage(sender.ID, "Dang entry insertion failed")
-	}
-	b.API.SendTextMessage(sender.ID, "inserted entry")
-
-	log.Printf("Event: %+v", event)   // {ID:2066945410258565 Time:1510063491984}
-	log.Printf("Sender: %+v", sender) // {ID:1657077300989984}
-	log.Printf("Msg: %+v", msg)       // {ID:mid.$cAAcNE7mWyw1lyBGR51flsxJvj8_- Text:hello Seq:1028142}
+	b.api.SendTextMessage(sender.ID, "Hello!")
 }

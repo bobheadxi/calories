@@ -61,3 +61,43 @@ func (s *Server) AddEntry(entry Entry) error {
 	}
 	return nil
 }
+
+// GetUser : return a user from a Users table based on a given id
+func (s *Server) GetUser(id string) (*User, error) {
+	user := &User{}
+	sqlStatement := `
+	SELECT user_id, max_cal 
+	FROM users
+	WHERE user_id = $1`
+	row := s.db.QueryRow(sqlStatement, id)
+	err := row.Scan(&user.ID, &user.MaxCal)
+	if err != nil {
+		log.Print("Error finding a user: " + err.Error())
+		return nil, err
+	}
+	return user, nil
+}
+
+// GetEntries : return a list of entries from a Users table
+func (s *Server) GetEntries(id string) (*[]Entry, error) {
+	l := []Entry{}
+	sqlStatement := `
+	SELECT fuser_id, item, time, calories
+	FROM entries
+	WHERE fuser_id = $1`
+	rows, err := s.db.Query(sqlStatement, id)
+	if err != nil {
+		log.Print("No such user in entries: " + err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		entry := Entry{}
+		err := rows.Scan(&entry.ID, &entry.Item, &entry.Time, &entry.Calories)
+		if err != nil {
+			break
+		}
+		l = append(l, entry)
+	}
+	return &l, nil
+}
