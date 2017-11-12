@@ -25,8 +25,26 @@ func GetEnvConfig() (*EnvConfig, error) {
 		Token:       os.Getenv("FB_TOKEN"),
 		PageID:      os.Getenv("FB_PAGE_ID"),
 	}
-	if cfg.Port == "" || cfg.DatabaseURL == "" || cfg.Token == "" || cfg.PageID == "" {
-		return nil, errors.New("All configuration variables in EnvConfig must be set in your deployment environment")
+	errorMessage := "The following variables must be set in your deployment environment:"
+	errored := false
+	if cfg.Port == "" {
+		errorMessage += " $PORT"
+		errored = true
+	}
+	if cfg.DatabaseURL == "" {
+		errorMessage += " $DATAASE_URL"
+		errored = true
+	}
+	if cfg.Token == "" {
+		errorMessage += " $FB_TOKEN"
+		errored = true
+	}
+	if cfg.PageID == "" {
+		errorMessage += " $PAGE_ID"
+		errored = true
+	}
+	if errored {
+		return nil, errors.New(errorMessage)
 	}
 	return cfg, nil
 }
