@@ -32,7 +32,7 @@ func GetEnvConfig() (*EnvConfig, error) {
 		errored = true
 	}
 	if cfg.DatabaseURL == "" {
-		errorMessage += " $DATAASE_URL"
+		errorMessage += " $DATABASE_URL"
 		errored = true
 	}
 	if cfg.Token == "" {

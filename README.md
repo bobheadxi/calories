@@ -8,7 +8,7 @@ WIP
 ```bash
 heroku create
 heroku config:set HEROKU_URI=your-heroku-uri
-heroku config:set DATABASE_URI=your-database-uri
+heroku config:set DATABASE_URL=your-database-url
 ```
 4. Now you have to set up your Facebook app page. Create a Facebook page for your app at https://developers.facebook.com/apps/
 5. Click on "Messenger" under "Products". Generate a token under "Token Generation", and set up Webhook under "Webhooks". Use the URL of your Heroku server as your webhook URL (append `/webhook` to the end). Make sure you at least subscribe to `messages` and `messaging_postbacks`.
