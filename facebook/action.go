@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -20,6 +21,7 @@ func (api *API) SendMessage(m Message) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return errors.New("Bad response attempting to send a message to " + m.Recipient.ID)
@@ -47,6 +49,7 @@ func (api *API) GetUserProfile(userID string) (*UserProfile, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New("Error occured while requesting user profle: " + userID)
@@ -56,7 +59,6 @@ func (api *API) GetUserProfile(userID string) (*UserProfile, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
 	profile := &UserProfile{}
 	err = json.Unmarshal(respBody, profile)
@@ -68,7 +70,11 @@ func (api *API) GetUserProfile(userID string) (*UserProfile, error) {
 
 // SetWelcomeScreen : Sets up a welcome screen that greets first time users
 func (api *API) SetWelcomeScreen() error {
-	byt, err := json.Marshal(welcomeScreen)
+	byt, err := json.Marshal(appProfile{
+		GetStarted: getStarted{
+			Payload: "INIT_NEW_USER",
+		},
+	})
 	if err != nil {
 		return err
 	}
@@ -77,20 +83,12 @@ func (api *API) SetWelcomeScreen() error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("Bad response attempting to set Welcome Screen")
+		respBody, _ := ioutil.ReadAll(resp.Body)
+		return errors.New("Bad response attempting to set Welcome Screen: " + resp.Status + ", " + string(respBody))
 	}
-
+	log.Print("Welcome Screen successfully set.")
 	return nil
-}
-
-var welcomeScreen = WelcomeScreen{
-	GetStarted: "INIT_NEW_USER",
-	Greeting: []Greeting{
-		Greeting{
-			Locale: "default",
-			Text:   "Hello {{user_first_name}}! I am Calories, and I am here to help you become the biggest Sumo wrestler you can be!",
-		},
-	},
 }

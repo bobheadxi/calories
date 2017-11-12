@@ -13,5 +13,6 @@ func (b *Bot) initUser(c *Context) error {
 		Timezone: profile.Timezone,
 		Name:     profile.FirstName,
 	}
+	b.api.SendTextMessage(c.facebookID, "Nice to meet you, "+user.Name+" :)")
 	return b.server.AddUser(user)
 }

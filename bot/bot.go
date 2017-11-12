@@ -55,7 +55,12 @@ func New(api *facebook.API, sv *server.Server) *Bot {
 
 // Run : Spins up the Calories bot
 func (b *Bot) Run(port string) {
+	log.Print("Spinning up the bot...")
 	http.HandleFunc("/webhook", b.api.Handler)
+	err := b.api.SetWelcomeScreen()
+	if err != nil {
+		log.Print(err)
+	}
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 

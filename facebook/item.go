@@ -7,14 +7,11 @@ type UserProfile struct {
 	Gender    string `json:"gender,omitempty"`
 }
 
-// WelcomeScreen : Used to set a welcome screen for new users
-type WelcomeScreen struct {
-	GetStarted string     `json:"get_started"`
-	Greeting   []Greeting `json:"greeting"`
+// appProfile : Used to set a welcome screen and greeting for new users
+type appProfile struct {
+	GetStarted getStarted `json:"get_started"`
 }
 
-// Greeting : Specifies a greeting message for a locale for the welcome screen
-type Greeting struct {
-	Locale string `json:"locale"`
-	Text   string `json:"string"`
+type getStarted struct {
+	Payload string `json:"payload"`
 }
