@@ -21,12 +21,16 @@ var (
 // MessageHandler : Called when a new message is received
 type MessageHandler func(Event, Sender, ReceivedMessage)
 
+// PostbackHandler : Called when a postback is received
+type PostbackHandler func(Event, Sender, Postback)
+
 // API : The service that handles all callbacks from Facebook,
 // sorts events and passes them to appropriate handlers
 type API struct {
-	PageID         string
-	Token          string
-	MessageHandler MessageHandler
+	PageID          string
+	Token           string
+	MessageHandler  MessageHandler
+	PostbackHandler PostbackHandler
 }
 
 // New : Build a new instance of our Facebook API service
@@ -76,8 +80,11 @@ func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
 	for _, entry := range event.Entries {
 		for _, message := range entry.Messaging {
 			if message.Message != nil {
-				// start goroutine to handle received message
+				// Handle Message event
 				go api.MessageHandler(entry.Event, *message.Sender, *message.Message)
+			} else if message.Postback != nil {
+				// Handle Postback event
+				go api.PostbackHandler(entry.Event, *message.Sender, *message.Postback)
 			}
 		}
 	}
