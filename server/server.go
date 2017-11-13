@@ -39,9 +39,9 @@ func (s *Server) InsertDataExample(id string, content string) (int, error) {
 // AddUser : insert user into database
 func (s *Server) AddUser(user User) error {
 	sqlStatement := `  
-	INSERT INTO users (user_id, max_cal)  
-	VALUES ($1, $2)`
-	_, err := s.db.Exec(sqlStatement, user.ID, user.MaxCal)
+	INSERT INTO users (user_id, max_cal, timezone, name)  
+	VALUES ($1, $2, $3, $4)`
+	_, err := s.db.Exec(sqlStatement, user.ID, user.MaxCal, user.Timezone, user.Name)
 	if err != nil {
 		log.Print("Error adding user: " + err.Error())
 		return err
@@ -66,11 +66,11 @@ func (s *Server) AddEntry(entry Entry) error {
 func (s *Server) GetUser(id string) (*User, error) {
 	user := &User{}
 	sqlStatement := `
-	SELECT user_id, max_cal 
+	SELECT user_id, max_cal, timezone, name
 	FROM users
 	WHERE user_id = $1`
 	row := s.db.QueryRow(sqlStatement, id)
-	err := row.Scan(&user.ID, &user.MaxCal)
+	err := row.Scan(&user.ID, &user.MaxCal, &user.Timezone, user.Name)
 	if err != nil {
 		log.Print("Error finding a user: " + err.Error())
 		return nil, err

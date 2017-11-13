@@ -12,9 +12,15 @@ type EventStream struct {
 type MessageEvent struct {
 	Event
 	Messaging []struct {
-		Sender  *Sender          `json:"sender"`
-		Message *ReceivedMessage `json:"message,omitempty"`
+		Sender   *Sender          `json:"sender"`
+		Message  *ReceivedMessage `json:"message,omitempty"`
+		Postback *Postback        `json:"postback,omitempty"`
 	} `json:"messaging"`
+}
+
+// Postback : A postback payload (typically from button presses, etc)
+type Postback struct {
+	Payload string `json:"payload"`
 }
 
 // Event : Data about a MessageEvent
@@ -30,13 +36,5 @@ type Sender struct {
 
 // ReceivedMessage : The content of a message that was received
 type ReceivedMessage struct {
-	ID   string `json:"mid"`
 	Text string `json:"text,omitempty"`
-	Seq  int    `json:"seq"`
-}
-
-// DeliveryResponse : Response from Facebook after a message has been delivered
-type DeliveryResponse struct {
-	RecipientID string `json:"recipient_id"`
-	MessageID   string `json:"message_id"`
 }
