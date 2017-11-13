@@ -11,9 +11,9 @@ import (
 )
 
 func main() {
-	config := config.GetenvConfig()
-	if config.Port == "" {
-		log.Fatal("$PORT must be set")
+	config, err := config.GetEnvConfig()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// Set up Postgres connection
