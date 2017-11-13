@@ -7,7 +7,6 @@ package bot
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
@@ -43,6 +42,7 @@ func New(api *facebook.API, sv *server.Server) *Bot {
 	// Add new command keywords here
 	commands := map[string]Handler{
 		"help": b.help,
+		"test": b.test,
 	}
 	b.commands = commands
 
