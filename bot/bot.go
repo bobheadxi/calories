@@ -7,6 +7,7 @@ package bot
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
@@ -72,7 +73,7 @@ func (b *Bot) MessageHandler(event facebook.Event, sender facebook.Sender, msg f
 		content:    msg.Text,
 	}
 	// TODO : make command recognition smarter
-	handler, found := b.commands[msg.Text]
+	handler, found := b.commands[strings.ToLower(context.content)]
 	if !found {
 		handler = b.help
 	}
