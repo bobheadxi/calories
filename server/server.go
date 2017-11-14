@@ -13,7 +13,7 @@ type Server struct {
 	db *sql.DB
 }
 
-// New : Instantiasafsldfalksdjf
+// New : Instantiate server
 func New(cfg *config.EnvConfig) *Server {
 	db, err := sql.Open("postgres", cfg.DatabaseURL)
 	if err != nil {
@@ -24,18 +24,6 @@ func New(cfg *config.EnvConfig) *Server {
 	}
 }
 
-// InsertDataExample : Example use of database insertion
-// DEPRECATE ASAP
-func (s *Server) InsertDataExample(id string, content string) (int, error) {
-	var userid int
-	err := s.db.QueryRow(`INSERT INTO test(id, message) VALUES(` + id + `, '` + content + `') RETURNING id`).Scan(&userid)
-	if err != nil {
-		log.Print(err)
-		return 0, err
-	}
-	return userid, nil
-}
-
 // AddUser : insert user into database
 func (s *Server) AddUser(user User) error {
 	sqlStatement := `  
@@ -43,7 +31,7 @@ func (s *Server) AddUser(user User) error {
 	VALUES ($1, $2, $3, $4)`
 	_, err := s.db.Exec(sqlStatement, user.ID, user.MaxCal, user.Timezone, user.Name)
 	if err != nil {
-		log.Print("Error adding user: " + err.Error())
+		log.Print("AddUser failed: " + err.Error())
 		return err
 	}
 	return nil
@@ -56,7 +44,7 @@ func (s *Server) AddEntry(entry Entry) error {
 	VALUES ($1, $2, $3, $4)`
 	_, err := s.db.Exec(sqlStatement, entry.ID, entry.Time, entry.Item, entry.Calories)
 	if err != nil {
-		log.Print("Error adding entry: " + err.Error())
+		log.Print("AddEntry failed: " + err.Error())
 		return err
 	}
 	return nil
@@ -72,7 +60,7 @@ func (s *Server) GetUser(id string) (*User, error) {
 	row := s.db.QueryRow(sqlStatement, id)
 	err := row.Scan(&user.ID, &user.MaxCal, &user.Timezone, user.Name)
 	if err != nil {
-		log.Print("Error finding a user: " + err.Error())
+		log.Print("GetUser failed: " + err.Error())
 		return nil, err
 	}
 	return user, nil
@@ -87,7 +75,7 @@ func (s *Server) GetEntries(id string) (*[]Entry, error) {
 	WHERE fuser_id = $1`
 	rows, err := s.db.Query(sqlStatement, id)
 	if err != nil {
-		log.Print("No such user in entries: " + err.Error())
+		log.Print("GetEntries failed: " + err.Error())
 		return nil, err
 	}
 	defer rows.Close()
@@ -100,4 +88,27 @@ func (s *Server) GetEntries(id string) (*[]Entry, error) {
 		l = append(l, entry)
 	}
 	return &l, nil
+}
+
+// SumCalories : return sum of calories from entries for specific user
+func (s *Server) SumCalories(id string) (int, error) {
+	sqlStatement := `
+	SELECT SUM(calories)
+	FROM entries
+	WHERE fuser_id = $1`
+	rows, err := s.db.Query(sqlStatement, id)
+	if err != nil {
+		log.Print("SumCalories failed: " + err.Error())
+		return 0, nil
+	}
+	var sum int
+	defer rows.Close()
+	for rows.Next() {
+		err = rows.Scan(&sum)
+		if err != nil {
+			log.Print("SumCalories failed: " + err.Error())
+			return 0, nil
+		}
+	}
+	return sum, nil
 }
