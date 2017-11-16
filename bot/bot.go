@@ -50,6 +50,8 @@ func New(api *facebook.API, sv *server.Server) *Bot {
 	// Add new postback events here
 	postbacks := map[string]Handler{
 		"INIT_NEW_USER": b.initUser,
+		"TEST_1":        b.testOne,
+		"TEST_2":        b.testTwo,
 	}
 	b.postbacks = postbacks
 	return &b

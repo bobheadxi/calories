@@ -3,6 +3,7 @@ package bot
 import (
 	"strconv"
 
+	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
 )
 
@@ -26,5 +27,18 @@ func (b *Bot) test(c *Context) error {
 		b.api.SendTextMessage(c.facebookID, "No calories for you: "+err.Error())
 		return err
 	}
-	return b.api.SendTextMessage(c.facebookID, "your total calories are "+strconv.Itoa(response))
+	b.api.SendTextMessage(c.facebookID, "your total calories are "+strconv.Itoa(response))
+	qr := []facebook.QuickReply{
+		facebook.QuickReply{
+			ContentType: "text",
+			Title:       "Yes!",
+			Payload:     "TEST_1",
+		},
+		facebook.QuickReply{
+			ContentType: "text",
+			Title:       "No!",
+			Payload:     "TEST_2",
+		},
+	}
+	return b.api.SendQuickReplyTemplate(c.facebookID, "Are you hungry?", qr)
 }

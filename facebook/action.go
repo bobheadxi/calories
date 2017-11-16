@@ -11,7 +11,7 @@ import (
 )
 
 // SendMessage : Delivers a Message (see struct Message from event)
-func (api *API) SendMessage(m Message) error {
+func (api *API) sendMessage(m Message) error {
 	byt, err := json.Marshal(m)
 	if err != nil {
 		return err
@@ -33,14 +33,30 @@ func (api *API) SendMessage(m Message) error {
 // SendTextMessage : Sends a simple text message to specified recipient
 func (api *API) SendTextMessage(recipientID string, message string) error {
 	mes := Message{
+		MessageType: "RESPONSE", // TODO: allow caller to specify type
 		Recipient: Recipient{
 			ID: recipientID,
 		},
-		Message: Package{
+		Package: Package{
 			Text: message,
 		},
 	}
-	return api.SendMessage(mes)
+	return api.sendMessage(mes)
+}
+
+// SendQuickReplyTemplate : Sends a quick reply template to specified recipient
+func (api *API) SendQuickReplyTemplate(recipientID string, message string, quickReplies []QuickReply) error {
+	mes := Message{
+		MessageType: "RESPONSE", // TODO: allow caller to specify type
+		Recipient: Recipient{
+			ID: recipientID,
+		},
+		Package: Package{
+			Text:       message,
+			QuickReply: quickReplies,
+		},
+	}
+	return api.sendMessage(mes)
 }
 
 // GetUserProfile : Get the profile of specified user
