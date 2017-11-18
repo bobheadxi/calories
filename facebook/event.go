@@ -36,5 +36,6 @@ type Sender struct {
 
 // ReceivedMessage : The content of a message that was received
 type ReceivedMessage struct {
-	Text string `json:"text,omitempty"`
+	Text     string    `json:"text,omitempty"`
+	Postback *Postback `json:"quick_reply,omitempty"`
 }
