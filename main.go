@@ -19,12 +19,6 @@ func main() {
 	// Set up Postgres connection
 	server := server.New(config)
 
-	// Start DB Schema check
-	if (!server.CheckDB()) {
-		// TODO: Do something when it fails
-		log.Fatal("RIP")
-	}
-
 	// Set up Facebook API module
 	api := facebook.New(config)
 
