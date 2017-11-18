@@ -19,15 +19,23 @@ func New(cfg *config.EnvConfig) *Server {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &Server{
+
+	server := &Server{
 		db: db,
 	}
+
+	// Start DB Schema check
+	if (!server.checkDatabaseIntegrity()) {
+		log.Fatal("Database formatted incorrectly.")
+	}
+
+	return server
 }
 
 // AddUser : insert user into database
 func (s *Server) AddUser(user User) error {
-	sqlStatement := `  
-	INSERT INTO users (user_id, max_cal, timezone, name)  
+	sqlStatement := `
+	INSERT INTO users (user_id, max_cal, timezone, name)
 	VALUES ($1, $2, $3, $4)`
 	_, err := s.db.Exec(sqlStatement, user.ID, user.MaxCal, user.Timezone, user.Name)
 	if err != nil {
@@ -39,8 +47,8 @@ func (s *Server) AddUser(user User) error {
 
 // AddEntry : add an entry to the database
 func (s *Server) AddEntry(entry Entry) error {
-	sqlStatement := `  
-	INSERT INTO entries (fuser_id, time, item, calories)  
+	sqlStatement := `
+	INSERT INTO entries (fuser_id, time, item, calories)
 	VALUES ($1, $2, $3, $4)`
 	_, err := s.db.Exec(sqlStatement, entry.ID, entry.Time, entry.Item, entry.Calories)
 	if err != nil {
