@@ -24,8 +24,8 @@ func New(cfg *config.EnvConfig) *Server {
 		db: db,
 	}
 
-	// Start DB Schema check
-	if (!server.checkDatabaseIntegrity()) {
+	// Check integrity of database schema
+	if !server.checkDatabaseIntegrity() {
 		log.Fatal("Database formatted incorrectly.")
 	}
 
@@ -99,10 +99,9 @@ func (s *Server) GetUsersInTimezone(tz int) (*map[*User]int, error) {
 		user := User{}
 		err := rows.Scan(&user.ID, &user.MaxCal, &user.Name, &user.Timezone, &cVal)
 		if err != nil {
-			log.Print(err.Error())
+			log.Print("Row scan failed in GetUsersInTimezone: " + err.Error())
 			break
 		}
-		log.Print(user.Name)
 		users[&user] = cVal
 	}
 	return &users, nil
@@ -125,7 +124,7 @@ func (s *Server) GetEntries(id string) (*[]Entry, error) {
 		entry := Entry{}
 		err := rows.Scan(&entry.ID, &entry.Item, &entry.Time, &entry.Calories)
 		if err != nil {
-			log.Print(err.Error())
+			log.Print("Row scan failed in GetEntries: " + err.Error())
 			break
 		}
 		l = append(l, entry)
