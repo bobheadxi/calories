@@ -66,6 +66,40 @@ func (s *Server) GetUser(id string) (*User, error) {
 	return user, nil
 }
 
+// GetUsersInTimezone : return all users in given timezone
+// Returns a map with Users as keys and their total event calories as values
+// Example usage:
+// 	users, _ := b.server.GetUsersInTimezone(-8)
+//  for u, v := range *users {
+//		// do things
+// 	}
+func (s *Server) GetUsersInTimezone(tz int) (*map[*User]int, error) {
+	users := make(map[*User]int)
+	sqlStatement := `
+	SELECT users.user_id, users.max_cal, users.name, users.timezone, SUM(entries.calories)
+	FROM users JOIN entries ON users.user_id=entries.fuser_id
+	WHERE timezone = $1
+	GROUP BY users.user_id`
+	rows, err := s.db.Query(sqlStatement, tz)
+	if err != nil {
+		log.Print("GetUsersInTimezone failed: " + err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var cVal int
+		user := User{}
+		err := rows.Scan(&user.ID, &user.MaxCal, &user.Name, &user.Timezone, &cVal)
+		if err != nil {
+			log.Print(err.Error())
+			break
+		}
+		log.Print(user.Name)
+		users[&user] = cVal
+	}
+	return &users, nil
+}
+
 // GetEntries : return a list of entries from a Users table
 func (s *Server) GetEntries(id string) (*[]Entry, error) {
 	l := []Entry{}
@@ -83,6 +117,7 @@ func (s *Server) GetEntries(id string) (*[]Entry, error) {
 		entry := Entry{}
 		err := rows.Scan(&entry.ID, &entry.Item, &entry.Time, &entry.Calories)
 		if err != nil {
+			log.Print(err.Error())
 			break
 		}
 		l = append(l, entry)
@@ -91,6 +126,9 @@ func (s *Server) GetEntries(id string) (*[]Entry, error) {
 }
 
 // SumCalories : return sum of calories from entries for specific user
+// Example usage:
+// 	calories, _ := b.server.SumCalories(c.facebookID)
+//	log.Print(strconv.Itoa(calories))
 func (s *Server) SumCalories(id string) (int, error) {
 	sqlStatement := `
 	SELECT SUM(calories)
