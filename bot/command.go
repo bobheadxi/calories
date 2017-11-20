@@ -11,6 +11,7 @@ func (b *Bot) help(c *Context) error {
 	return b.api.SendTextMessage(c.facebookID, "Hello! I'm pretty useless and can't really do anything right now, sorry :(")
 }
 
+// test : test new functions here - deprecate when possible
 func (b *Bot) test(c *Context) error {
 	e := server.Entry{
 		ID:       c.facebookID,
@@ -25,9 +26,16 @@ func (b *Bot) test(c *Context) error {
 	response, err := b.server.SumCalories(c.facebookID)
 	if err != nil {
 		b.api.SendTextMessage(c.facebookID, "No calories for you: "+err.Error())
-		return err
 	}
 	b.api.SendTextMessage(c.facebookID, "your total calories are "+strconv.Itoa(response))
+	users, err := b.server.GetUsersInTimezone(-8)
+	if err != nil {
+		b.api.SendTextMessage(c.facebookID, "Get users failed: "+err.Error())
+	}
+	for u, v := range *users {
+		b.api.SendTextMessage(u.ID, "Someone is snooping on ya ;)")
+		b.api.SendTextMessage(c.facebookID, u.Name+" has eaten "+strconv.Itoa(v)+" calories :o")
+	}
 	qr := []facebook.QuickReply{
 		facebook.QuickReply{
 			ContentType: "text",

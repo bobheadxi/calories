@@ -12,7 +12,7 @@ func (s *Server) checkDatabaseIntegrity() bool {
 	WHERE table_name = 'users'`
 	rows, err := s.db.Query(sqlStatement)
 	if err != nil {
-		log.Print("CheckDB on Users failed: " + err.Error())
+		log.Print("checkDatabaseIntegrity on Users failed: " + err.Error())
 		return false
 	}
 
@@ -20,53 +20,52 @@ func (s *Server) checkDatabaseIntegrity() bool {
 	var typ string
 
 	UsersSchema := []string{"user_id", "max_cal", "timezone", "name"}
-	UsersSchemaType := []string{"bigint", "bigint", "integer", "text"}
+	UsersSchemaType := []string{"text", "integer", "integer", "text"}
 
 	idx := 0
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&col, &typ)
 		if err != nil {
-			log.Print("CheckDB on Users failed: " + err.Error())
+			log.Print("checkDatabaseIntegrity on Users failed: " + err.Error())
 			return false
 		}
-		if (col != UsersSchema[idx] || typ != UsersSchemaType[idx]) {
-			log.Print("CheckDB on Users failed: " + col + " " + typ)
+		if col != UsersSchema[idx] || typ != UsersSchemaType[idx] {
+			log.Print("checkDatabaseIntegrity on Users failed: " + col + " not " + typ)
 			return false
 		}
 		idx++
 	}
 
-	// Entries
+	// Check Entries table
 	sqlStatement = `
 	SELECT column_name, data_type
 	FROM information_schema.columns
 	WHERE table_name = 'entries'`
 	rows, err = s.db.Query(sqlStatement)
 	if err != nil {
-		log.Print("CheckDB on Entries failed: " + err.Error())
+		log.Print("checkDatabaseIntegrity on Entries failed: " + err.Error())
 		return false
 	}
 
 	EntriesSchema := []string{"fuser_id", "time", "item", "calories"}
-	EntriesSchemaType := []string{"bigint", "bigint", "text", "bigint"}
+	EntriesSchemaType := []string{"text", "bigint", "text", "integer"}
 
 	idx = 0
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&col, &typ)
 		if err != nil {
-			log.Print("CheckDB on Entries failed: " + err.Error())
+			log.Print("checkDatabaseIntegrity on Entries failed: " + err.Error())
 			return false
 		}
-		if (col != EntriesSchema[idx] || typ != EntriesSchemaType[idx]) {
-			log.Print("CheckDB on Entries failed: " + col + " " + typ)
+		if col != EntriesSchema[idx] || typ != EntriesSchemaType[idx] {
+			log.Print("checkDatabaseIntegrity on Entries failed: " + col + " not " + typ)
 			return false
 		}
 		idx++
 	}
 
-	// No fatals
 	log.Print("Successfully passed DB Schema check!")
 	return true
 }
