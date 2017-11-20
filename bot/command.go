@@ -3,6 +3,7 @@ package bot
 import (
 	"strconv"
 
+	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
 )
 
@@ -35,5 +36,17 @@ func (b *Bot) test(c *Context) error {
 		b.api.SendTextMessage(u.ID, "Someone is snooping on ya ;)")
 		b.api.SendTextMessage(c.facebookID, u.Name+" has eaten "+strconv.Itoa(v)+" calories :o")
 	}
-	return nil
+	qr := []facebook.QuickReply{
+		facebook.QuickReply{
+			ContentType: "text",
+			Title:       "Yes!",
+			Payload:     "TEST_1",
+		},
+		facebook.QuickReply{
+			ContentType: "text",
+			Title:       "No!",
+			Payload:     "TEST_2",
+		},
+	}
+	return b.api.SendQuickReplyTemplate(c.facebookID, "Are you hungry?", qr)
 }

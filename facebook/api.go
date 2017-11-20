@@ -79,12 +79,17 @@ func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
 	// Iterate through event entries
 	for _, entry := range event.Entries {
 		for _, message := range entry.Messaging {
-			if message.Message != nil {
-				// Handle Message event
-				go api.MessageHandler(entry.Event, *message.Sender, *message.Message)
-			} else if message.Postback != nil {
+			if message.Postback != nil {
 				// Handle Postback event
 				go api.PostbackHandler(entry.Event, *message.Sender, *message.Postback)
+			} else if message.Message != nil {
+				// Handle Message event
+				if message.Message.Postback != nil {
+					// if quick_reply, send payload to PostbackHandler
+					go api.PostbackHandler(entry.Event, *message.Sender, *message.Message.Postback)
+				} else {
+					go api.MessageHandler(entry.Event, *message.Sender, *message.Message)
+				}
 			}
 		}
 	}

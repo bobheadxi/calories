@@ -16,3 +16,11 @@ func (b *Bot) initUser(c *Context) error {
 	b.api.SendTextMessage(c.facebookID, "Nice to meet you, "+user.Name+" :)")
 	return b.server.AddUser(user)
 }
+
+func (b *Bot) testOne(c *Context) error {
+	return b.api.SendTextMessage(c.facebookID, "Okay!")
+}
+
+func (b *Bot) testTwo(c *Context) error {
+	return b.api.SendTextMessage(c.facebookID, "Oh :(")
+}
