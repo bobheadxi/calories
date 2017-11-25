@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/bobheadxi/calories/facebook"
+	"github.com/bobheadxi/calories/scheduler"
 	"github.com/bobheadxi/calories/server"
 )
 
@@ -19,6 +20,7 @@ type Bot struct {
 	server    *server.Server
 	commands  map[string]Handler
 	postbacks map[string]Handler
+	scheduler *scheduler.Scheduler
 }
 
 // Handler : A function that handles an event
@@ -65,6 +67,7 @@ func (b *Bot) Run(port string) {
 	if err != nil {
 		log.Print(err)
 	}
+	b.scheduler.NewScheduler()
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
