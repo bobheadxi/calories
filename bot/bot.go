@@ -65,6 +65,7 @@ func (b *Bot) Run(port string) {
 	if err != nil {
 		log.Print(err)
 	}
+	go b.scheduler()
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
