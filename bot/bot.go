@@ -16,7 +16,7 @@ import (
 // Bot : The Calories bot of the app.
 type Bot struct {
 	api       *facebook.API
-	server    *server.Server
+	server    *server.ServerLayer
 	commands  map[string]Handler
 	postbacks map[string]Handler
 }
@@ -32,7 +32,7 @@ type Context struct {
 }
 
 // New : Sets up and returns a Bot
-func New(api *facebook.API, sv *server.Server) *Bot {
+func New(api *facebook.API, sv *server.ServerLayer) *Bot {
 	b := Bot{
 		api:    api,
 		server: sv,
