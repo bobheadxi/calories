@@ -4,7 +4,6 @@ package tests
 
 import (
 	"testing"
-	"psql"
 
 	"github.com/bobheadxi/calories/config"
 	"github.com/bobheadxi/calories/server"
@@ -16,7 +15,7 @@ var ser server.Server
 func TestNewServer(t *testing.T) {
 
 	cfg := config.EnvConfig{
-		DatabaseURL: "postgresql://localhost",
+		DatabaseURL: "postgresql://localhost", // CHANGE TO TRAVUS SOMEHOW
 	}
 
 	ser := server.New(&cfg);
