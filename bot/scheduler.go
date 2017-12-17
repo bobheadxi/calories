@@ -8,7 +8,7 @@ import (
 
 // scheduler : start and check every hour to send scheduled summaries to users
 func (b *Bot) scheduler() {
-	t := time.NewTicker(time.Second * 1)
+	t := time.NewTicker(time.Hour * 1)
 	go func() {
 		for _ = range t.C {
 			b.sendSummary()
@@ -22,13 +22,12 @@ func (b *Bot) sendSummary() {
 
 	utcTime := time.Now().UTC()
 	timezone := summaryTime - utcTime.Hour() - 24
-	log.Print("Ticking... " + strconv.Itoa(utcTime.Hour()))
-	log.Print(timezone)
+	log.Print("Sending summaries to timezone: " + strconv.Itoa(timezone))
 	users, err := b.server.GetUsersInTimezone(timezone)
 	if err != nil {
 		log.Print("Get users failed: " + err.Error())
 	}
 	for u, v := range *users {
-		b.api.SendTextMessage(u.ID, "You consumed"+strconv.Itoa(v)+"calories today")
+		go b.api.SendTextMessage(u.ID, "You consumed "+strconv.Itoa(v)+" calories today")
 	}
 }
