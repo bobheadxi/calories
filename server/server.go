@@ -7,6 +7,16 @@ import (
 	"github.com/bobheadxi/calories/config"
 )
 
+// ServerLayer : Interface to interact with database
+type ServerLayer interface {
+	AddUser(User) error
+	AddEntry(Entry) error
+	GetUser(string) (*User, error)
+	GetUsersInTimezone(int) (*map[*User]int, error)
+	GetEntries(string) (*[]Entry, error)
+	SumCalories(string) (int, error)
+}
+
 // Server : Contains the app's database and offers an
 // interface to interact with it.
 type Server struct {

@@ -18,6 +18,16 @@ var (
 	GraphAPI = "https://graph.facebook.com"
 )
 
+//APILayer : interface for facebook API interactions
+type APILayer interface {
+	Handler(http.ResponseWriter, *http.Request)
+	SetHandlers(MessageHandler, PostbackHandler)
+	SendTextMessage(string, string) error
+	SendQuickReplyTemplate(string, string, []QuickReply) error
+	GetUserProfile(userID string) (*UserProfile, error)
+	SetWelcomeScreen() error
+}
+
 // MessageHandler : Called when a new message is received
 type MessageHandler func(Event, Sender, ReceivedMessage)
 
@@ -39,6 +49,12 @@ func New(config *config.EnvConfig) *API {
 		PageID: config.PageID,
 		Token:  config.Token,
 	}
+}
+
+// SetHandlers : Assign functions to handle various event types
+func (api *API) SetHandlers(m MessageHandler, p PostbackHandler) {
+	api.MessageHandler = m
+	api.PostbackHandler = p
 }
 
 // Handler : Listens for all HTTP requests and decides what to do with them
