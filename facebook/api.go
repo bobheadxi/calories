@@ -39,8 +39,8 @@ type PostbackHandler func(Event, Sender, Postback)
 type API struct {
 	PageID          string
 	Token           string
-	messageHandler  MessageHandler
-	postbackHandler PostbackHandler
+	MessageHandler  MessageHandler
+	PostbackHandler PostbackHandler
 }
 
 // New : Build a new instance of our Facebook API service
@@ -53,8 +53,8 @@ func New(config *config.EnvConfig) *API {
 
 // SetHandlers : Assign functions to handle various event types
 func (api *API) SetHandlers(m MessageHandler, p PostbackHandler) {
-	api.messageHandler = m
-	api.postbackHandler = p
+	api.MessageHandler = m
+	api.PostbackHandler = p
 }
 
 // Handler : Listens for all HTTP requests and decides what to do with them
@@ -97,14 +97,14 @@ func (api *API) handlePOST(rw http.ResponseWriter, req *http.Request) {
 		for _, message := range entry.Messaging {
 			if message.Postback != nil {
 				// Handle Postback event
-				go api.postbackHandler(entry.Event, *message.Sender, *message.Postback)
+				go api.PostbackHandler(entry.Event, *message.Sender, *message.Postback)
 			} else if message.Message != nil {
 				// Handle Message event
 				if message.Message.Postback != nil {
 					// if quick_reply, send payload to PostbackHandler
-					go api.postbackHandler(entry.Event, *message.Sender, *message.Message.Postback)
+					go api.PostbackHandler(entry.Event, *message.Sender, *message.Message.Postback)
 				} else {
-					go api.messageHandler(entry.Event, *message.Sender, *message.Message)
+					go api.MessageHandler(entry.Event, *message.Sender, *message.Message)
 				}
 			}
 		}
