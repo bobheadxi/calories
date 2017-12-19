@@ -77,7 +77,7 @@ func (s *Server) GetUser(id string) (*User, error) {
 	FROM users
 	WHERE user_id = $1`
 	row := s.db.QueryRow(sqlStatement, id)
-	err := row.Scan(&user.ID, &user.MaxCal, &user.Timezone, user.Name)
+	err := row.Scan(&user.ID, &user.MaxCal, &user.Timezone, &user.Name)
 	if err != nil {
 		log.Print("GetUser failed: " + err.Error())
 		return nil, err

@@ -18,6 +18,7 @@ services:
 
 before_script:
   - psql -c 'create database test_db;' -U postgres
+  - psql -d test_db -a -f ./scripts/test_db_setup.sql
 
 script:
   - $HOME/gopath/bin/goveralls -service=travis-ci

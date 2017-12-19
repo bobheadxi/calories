@@ -9,27 +9,29 @@ import (
 	"github.com/bobheadxi/calories/config"
 )
 
-var ser Server
-
 // TestNewServer : test Server instantiation
 func TestNewServer(t *testing.T) {
+	_ = newTestDBConnection()
+}
+
+func newTestDBConnection() *Server {
 	travis := os.Getenv("TRAVIS")
 	var cfg config.EnvConfig
 	if travis == "true" {
 		cfg = config.EnvConfig{
-			DatabaseURL: "postgresql://localhost",
+			DatabaseURL: "postgresql://localhost/test_db",
 		}
 	} else {
 		cfg = config.EnvConfig{
 			DatabaseURL: "postgresql://localhost",
 		}
 	}
-
-	ser := New(&cfg)
-	_ = ser
+	return New(&cfg)
 }
 
 func TestUserFunctions(t *testing.T) {
+	ser := newTestDBConnection()
+
 	u := User{
 		ID:       "Some random id context from facebook",
 		MaxCal:   2000,
@@ -57,6 +59,8 @@ func TestUserFunctions(t *testing.T) {
 }
 
 func TestEntryFunctions(t *testing.T) {
+	ser := newTestDBConnection()
+
 	e := Entry{
 		ID:       "Some random id context from facebook",
 		Time:     123456789,
@@ -69,7 +73,8 @@ func TestEntryFunctions(t *testing.T) {
 	if err != nil {
 		t.Errorf("Errored: " + err.Error())
 	}
-	// Check entry if they match or not
+
+	// Check if entry is as expected
 	sum := 0
 	for i := range *entries {
 		entry := (*entries)[i]
@@ -89,6 +94,7 @@ func TestEntryFunctions(t *testing.T) {
 		sum += entry.Calories
 	}
 
+	// Check if sum matches SumCalories()
 	sum2, err := ser.SumCalories(e.ID)
 	if err != nil {
 		t.Errorf("Errored: " + err.Error())
