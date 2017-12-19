@@ -1,4 +1,4 @@
-package tests
+package facebook
 
 // Tests for the facebook package
 
@@ -10,16 +10,15 @@ import (
 	"testing"
 
 	"github.com/bobheadxi/calories/config"
-	"github.com/bobheadxi/calories/facebook"
 )
 
-func apiSetUp() *facebook.API {
+func apiSetUp() *API {
 	cfg := config.EnvConfig{
 		PageID: "123",
 		Token:  "321",
 	}
-	// var api facebook.API;
-	api := facebook.New(&cfg)
+
+	api := New(&cfg)
 	return api
 }
 
@@ -54,32 +53,32 @@ func TestSendTextMessageAvailable(t *testing.T) {
 		// Check request method
 		if req.Method != "POST" {
 			t.Errorf("Request not POST")
-	}
+		}
 
-	// Check request body is as expected
-	read, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		t.Errorf("Bad request body: " + err.Error())
-	}
-	msg := &facebook.Message{}
-	err = json.Unmarshal(read, msg)
-	if err != nil {
-		t.Errorf("Bad message" + err.Error())
-	}
-	if msg.MessageType != "RESPONSE" {
-		t.Errorf("Wrong message type, expecting %s, got %s", "RESPONSE", msg.MessageType)
-	}
-	if msg.Package.Text != "Hello" {
-		t.Errorf("Wrong message text, expecting %s, got %s", "Hello", msg.Package.Text)
-	}
-	if msg.Recipient.ID != "789" {
-		t.Errorf("Wrong recipient, expecting %s, got %s", "789", msg.Recipient.ID)
-	}
+		// Check request body is as expected
+		read, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			t.Errorf("Bad request body: " + err.Error())
+		}
+		msg := &Message{}
+		err = json.Unmarshal(read, msg)
+		if err != nil {
+			t.Errorf("Bad message" + err.Error())
+		}
+		if msg.MessageType != "RESPONSE" {
+			t.Errorf("Wrong message type, expecting %s, got %s", "RESPONSE", msg.MessageType)
+		}
+		if msg.Package.Text != "Hello" {
+			t.Errorf("Wrong message text, expecting %s, got %s", "Hello", msg.Package.Text)
+		}
+		if msg.Recipient.ID != "789" {
+			t.Errorf("Wrong recipient, expecting %s, got %s", "789", msg.Recipient.ID)
+		}
 	}))
 	defer ts.Close()
 
-	// Set API to use fake server's URL and call SendTextMessage()
-	facebook.GraphAPI = ts.URL
+	// Set API to use fake server's URL and call SendTextMesssage
+	GraphAPI = ts.URL
 	err := api.SendTextMessage("789", "Hello")
 	if err != nil {
 		t.Errorf("Errored: " + err.Error())
@@ -98,8 +97,8 @@ func TestSendMessageUnavailable(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	// Set API to use fake server's URL and call SendTextMessage()
-	facebook.GraphAPI = ts.URL
+	// Set API to use fake server's URL and call SendTextMesssage
+	GraphAPI = ts.URL
 	err := api.SendTextMessage("789", "Hello")
 	// Should return error
 	if err == nil {

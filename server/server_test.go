@@ -1,4 +1,4 @@
-package tests
+package server
 
 // Tests for the facebook package
 
@@ -6,10 +6,9 @@ import (
 	"testing"
 
 	"github.com/bobheadxi/calories/config"
-	"github.com/bobheadxi/calories/server"
 )
 
-var ser server.Server
+var ser Server
 
 // TestNewServer : test Server instantiation
 func TestNewServer(t *testing.T) {
@@ -18,16 +17,16 @@ func TestNewServer(t *testing.T) {
 		DatabaseURL: "postgresql://localhost", // CHANGE TO TRAVUS SOMEHOW
 	}
 
-	ser := server.New(&cfg);
+	ser := New(&cfg)
 	_ = ser
 }
 
 func TestUserFunctions(t *testing.T) {
-	u := server.User{
-		ID:			"Some random id context from facebook",
-		MaxCal:		2000,
-		Timezone:	-8,
-		Name:		"Random Name",
+	u := User{
+		ID:       "Some random id context from facebook",
+		MaxCal:   2000,
+		Timezone: -8,
+		Name:     "Random Name",
 	}
 	ser.AddUser(u)
 
@@ -35,22 +34,22 @@ func TestUserFunctions(t *testing.T) {
 	if err != nil {
 		t.Errorf("Errored: " + err.Error())
 	}
-	if (usr.ID != u.ID) {
+	if usr.ID != u.ID {
 		t.Errorf("Errored: usr.ID doesn't match u.ID")
 	}
-	if (usr.MaxCal != u.MaxCal) {
+	if usr.MaxCal != u.MaxCal {
 		t.Errorf("Errored: usr.MaxCal doesn't match u.MaxCal")
 	}
-	if (usr.Timezone != u.Timezone) {
+	if usr.Timezone != u.Timezone {
 		t.Errorf("Errored: usr.ID doesn't match u.ID")
 	}
-	if (usr.Name != u.Name) {
+	if usr.Name != u.Name {
 		t.Errorf("Errored: usr.Name doesn't match u.Name")
 	}
 }
 
 func TestEntryFunctions(t *testing.T) {
-	e := server.Entry{
+	e := Entry{
 		ID:       "Some random id context from facebook",
 		Time:     123456789,
 		Item:     "Some random item context from facebook",
@@ -67,26 +66,26 @@ func TestEntryFunctions(t *testing.T) {
 	for i := range *entries {
 		entry := (*entries)[i]
 
-		if (entry.ID != e.ID) {
+		if entry.ID != e.ID {
 			t.Errorf("Errored: entry.ID doesn't match e.ID")
 		}
-		if (entry.Time != e.Time) {
+		if entry.Time != e.Time {
 			t.Errorf("Errored: entry.Time doesn't match e.Time")
 		}
-		if (entry.Item != e.Item) {
+		if entry.Item != e.Item {
 			t.Errorf("Errored: entry.Item doesn't match e.Item")
 		}
-		if (entry.Calories != e.Calories) {
+		if entry.Calories != e.Calories {
 			t.Errorf("Errored: entry.Calories doesn't match e.Calories")
 		}
 		sum += entry.Calories
 	}
 
 	sum2, err := ser.SumCalories(e.ID)
-	if (err != nil) {
+	if err != nil {
 		t.Errorf("Errored: " + err.Error())
 	}
-	if (sum2 != sum) {
+	if sum2 != sum {
 		t.Errorf("Errored: SumCalories doesn't match actual sum")
 	}
 }
