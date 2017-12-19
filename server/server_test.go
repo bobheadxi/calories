@@ -3,6 +3,7 @@ package server
 // Tests for the facebook package
 
 import (
+	"os"
 	"testing"
 
 	"github.com/bobheadxi/calories/config"
@@ -12,9 +13,16 @@ var ser Server
 
 // TestNewServer : test Server instantiation
 func TestNewServer(t *testing.T) {
-
-	cfg := config.EnvConfig{
-		DatabaseURL: "postgresql://localhost", // CHANGE TO TRAVUS SOMEHOW
+	travis := os.Getenv("TRAVIS")
+	var cfg config.EnvConfig
+	if travis == "true" {
+		cfg = config.EnvConfig{
+			DatabaseURL: "postgresql://localhost",
+		}
+	} else {
+		cfg = config.EnvConfig{
+			DatabaseURL: "postgresql://localhost",
+		}
 	}
 
 	ser := New(&cfg)

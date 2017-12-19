@@ -28,13 +28,13 @@ func TestNewFacebook(t *testing.T) {
 	api := apiSetUp()
 
 	if api.MessageHandler != nil && api.PostbackHandler != nil {
-		t.Logf("Handler setup incorrect")
+		t.Errorf("Handler setup incorrect")
 	}
 	if api.PageID != "123" {
-		t.Logf("PageID was incorrect, got: %s, want: %s.", api.PageID, "123")
+		t.Errorf("PageID was incorrect, got: %s, want: %s.", api.PageID, "123")
 	}
 	if api.Token != "321" {
-		t.Logf("Token was incorrect, got: %s, want: %s.", api.Token, "321")
+		t.Errorf("Token was incorrect, got: %s, want: %s.", api.Token, "321")
 	}
 }
 
