@@ -7,7 +7,6 @@ import (
 	"github.com/bobheadxi/calories/config"
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
-	_ "github.com/lib/pq"
 )
 
 func main() {

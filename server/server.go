@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/bobheadxi/calories/config"
+	_ "github.com/lib/pq" // Postgres
 )
 
 // ServerLayer : Interface to interact with database
