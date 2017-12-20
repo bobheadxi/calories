@@ -10,7 +10,7 @@ before_install:
   - go get github.com/mattn/goveralls
 
 install:
-  - make install-glide
+  - make glide
   - make deps
 
 services:

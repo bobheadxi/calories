@@ -38,3 +38,5 @@ Now you can message your Facebook page to try out the bot. Note that until your 
 - `make test` -> runs all tests with coverage reporting
 
 - `make clean` -> cleans up project (eg remove binaries)
+
+- `make deploy` -> deploys your branch to Heroku (and sets up the Heroku CLI if you haven't)

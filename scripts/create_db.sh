@@ -1,6 +1,5 @@
 # This script handles local database creation to make testing easier.
 # Run with `make db`
-set -x
 
 postgres -V
 if [ "$?" -gt "0" ]; then

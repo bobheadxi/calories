@@ -1,4 +1,4 @@
-.PHONY: test deps clean glide db
+.PHONY: test deps clean glide db deploy
 
 PACKAGES = `go list ./... | grep -v vendor/`
 
@@ -21,3 +21,6 @@ glide:
 
 db:
 	sh scripts/create_db.sh
+
+deploy: calories
+	sh scripts/heroku_deploy.sh
