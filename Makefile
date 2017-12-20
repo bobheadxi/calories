@@ -1,4 +1,4 @@
-.PHONY: test deps clean install_glide
+.PHONY: test deps clean glide db
 
 PACKAGES = `go list ./... | grep -v vendor/`
 
@@ -16,5 +16,8 @@ deps:
 clean: calories
 	rm -f calories
 
-install-glide:
+glide:
 	sh scripts/install_glide.sh
+
+db:
+	sh scripts/create_db.sh
