@@ -1,4 +1,4 @@
-.PHONY: test deps clean glide db deploy
+.PHONY: test test-verbose deps clean glide db deploy
 
 PACKAGES = `go list ./... | grep -v vendor/`
 
@@ -8,7 +8,12 @@ calories:
 	go build
 
 test:
+	make db
 	go test $(PACKAGES) --cover
+
+test-verbose:
+	make db
+	go test $(PACKAGES) -v --cover
 
 deps:
 	glide install

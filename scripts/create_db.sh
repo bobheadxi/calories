@@ -9,6 +9,7 @@ if [ "$?" -gt "0" ]; then
   if [ "$choice" == "y" ]; then
     echo "MAKE: Installing postgres..."
     brew install postgresql
+    initdb /usr/local/var/postgres
     echo "MAKE: Process complete - please run 'make db' again."
     exit
   else
@@ -18,7 +19,7 @@ if [ "$?" -gt "0" ]; then
 fi
 
 echo "MAKE: Killing existing postgres processes..."
-pkill postgres
+pg_ctl -D /usr/local/var/postgres stop -s -m fast
 pg_ctl -D /usr/local/var/postgres start
 createuser -s postgres
 createdb test_db
