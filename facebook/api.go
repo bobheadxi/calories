@@ -29,10 +29,10 @@ type APILayer interface {
 }
 
 // MessageHandler : Called when a new message is received
-type MessageHandler func(Event, Sender, ReceivedMessage)
+type MessageHandler func(Event, Sender, ReceivedMessage) error
 
 // PostbackHandler : Called when a postback is received
-type PostbackHandler func(Event, Sender, Postback)
+type PostbackHandler func(Event, Sender, Postback) error
 
 // API : The service that handles all callbacks from Facebook,
 // sorts events and passes them to appropriate handlers

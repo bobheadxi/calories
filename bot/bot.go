@@ -5,12 +5,15 @@ The bot's Message handlers and functions are described in this package.
 package bot
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
+	"github.com/jdkato/prose/tag"
+	"github.com/jdkato/prose/tokenize"
 )
 
 // Bot : The Calories bot of the app.
@@ -69,25 +72,31 @@ func (b *Bot) Run(port string) {
 }
 
 // MessageHandler : Handles messages
-func (b *Bot) MessageHandler(event facebook.Event, sender facebook.Sender, msg facebook.ReceivedMessage) {
+func (b *Bot) MessageHandler(event facebook.Event, sender facebook.Sender, msg facebook.ReceivedMessage) error {
 	context := &Context{
 		facebookID: sender.ID,
 		timestamp:  event.Time,
 		content:    msg.Text,
 	}
-	// TODO : make command recognition smarter
-	handler, found := b.commands[strings.ToLower(context.content)]
-	if !found {
-		handler = b.help
+
+	handler := b.help
+	words := tokenize.NewTreebankWordTokenizer().Tokenize(strings.ToLower(context.content))
+	tagger := tag.NewPerceptronTagger()
+	for _, tok := range tagger.Tag(words) {
+		// 'VB', 'VBG', 'VBN', 'VBP', 'VBZ' are verb types
+		fmt.Println(tok.Text, tok.Tag)
+		if tok.Tag == "VB" {
+			h, found := b.commands[tok.Text]
+			if found {
+				handler = h
+			}
+		}
 	}
-	err := handler(context)
-	if err != nil {
-		log.Print(err)
-	}
+	return handler(context)
 }
 
 // PostbackHandler : Handles postbacks
-func (b *Bot) PostbackHandler(event facebook.Event, sender facebook.Sender, postback facebook.Postback) {
+func (b *Bot) PostbackHandler(event facebook.Event, sender facebook.Sender, postback facebook.Postback) error {
 	context := &Context{
 		facebookID: sender.ID,
 		timestamp:  event.Time,
@@ -95,9 +104,7 @@ func (b *Bot) PostbackHandler(event facebook.Event, sender facebook.Sender, post
 	}
 	handler, found := b.postbacks[postback.Payload]
 	if found {
-		err := handler(context)
-		if err != nil {
-			log.Print(err)
-		}
+		return handler(context)
 	}
+	return nil
 }
