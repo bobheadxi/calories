@@ -22,6 +22,6 @@ echo "MAKE: Killing existing postgres processes..."
 pg_ctl -D /usr/local/var/postgres stop -s -m fast
 pg_ctl -D /usr/local/var/postgres start
 createuser -s postgres
-createdb test_db
-psql -d test_db -a -f ./scripts/test_db_setup.sql
+createdb calories_test_db
+psql -d calories_test_db -a -f ./scripts/test_db_setup.sql
 echo "MAKE: Local database ready to go!"

@@ -23,7 +23,7 @@ func newTestDBConnection() *Server {
 		}
 	} else {
 		cfg = config.EnvConfig{
-			DatabaseURL: "postgresql://postgres:@localhost/test_db?sslmode=disable",
+			DatabaseURL: "postgresql://postgres:@localhost/calories_test_db?sslmode=disable",
 		}
 	}
 	return New(&cfg)
