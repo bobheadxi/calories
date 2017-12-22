@@ -9,6 +9,9 @@
     },
     "FB_TOKEN": {
       "required": true
+    },
+    "DATABASE_URL": {
+      "required": true
     }
   },
   "formation": {},
