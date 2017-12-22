@@ -21,6 +21,16 @@ fi
 echo "MAKE: Killing existing postgres processes..."
 pg_ctl -D /usr/local/var/postgres stop -s -m fast
 pg_ctl -D /usr/local/var/postgres start
+while true; do
+  pg_ctl -D /usr/local/var/postgres status
+  if [ "$?" -gt "0" ]; then
+    echo "MAKE: Waiting for postgres to start..."
+    sleep 3
+  else
+    break
+  fi
+done
+
 createuser -s postgres
 createdb calories_test_db
 psql -d calories_test_db -a -f ./scripts/test_db_setup.sql
