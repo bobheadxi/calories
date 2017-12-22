@@ -1,11 +1,10 @@
-package tests
+package bot
 
 // Tests for the bot package
 
 import (
 	"testing"
 
-	"github.com/bobheadxi/calories/bot"
 	"github.com/bobheadxi/calories/facebook"
 	"github.com/bobheadxi/calories/server"
 )
@@ -14,7 +13,7 @@ import (
 func TestNewBot(t *testing.T) {
 	api := facebook.API{}
 	ser := server.Server{}
-	b := bot.New(&api, &ser)
+	b := New(&api, &ser)
 	if b == nil {
 		t.Errorf("Bot instantiation failed")
 	}

@@ -1,4 +1,6 @@
 # calories
+[![Build Status](https://travis-ci.org/bobheadxi/calories.svg?branch=dev)](https://travis-ci.org/bobheadxi/calories) [![Coverage Status](https://coveralls.io/repos/github/bobheadxi/calories/badge.svg?branch=31-unit-tests)](https://coveralls.io/github/bobheadxi/calories?branch=31-unit-tests)
+
 WIP
 
 ### Setup
@@ -22,3 +24,19 @@ heroku config:set FB_TOKEN=your-fb-token
 git push heroku dev:master
 ```
 Now you can message your Facebook page to try out the bot. Note that until your application gets submitted for review and accepted, other users will have to be added as testers before the bot will respond to them.
+
+### Development
+
+- `make` -> builds the project
+
+- `make glide` -> installs Glide without needing Homebrew etc
+
+- `make deps` -> installs project dependencies (via Glide)
+
+- `make db` -> sets up local database shenanigans for testing
+
+- `make test` -> runs all tests with coverage reporting
+
+- `make clean` -> cleans up project (eg remove binaries)
+
+- `make deploy` -> deploys your branch to Heroku (and sets up the Heroku CLI if you haven't)

@@ -1,4 +1,4 @@
-package tests
+package facebook
 
 // Tests for the facebook package
 
@@ -10,37 +10,40 @@ import (
 	"testing"
 
 	"github.com/bobheadxi/calories/config"
-	"github.com/bobheadxi/calories/facebook"
 )
 
-// TestNewFacebook : test API instantiation
-func TestNewFacebook(t *testing.T) {
+func apiSetUp() *API {
 	cfg := config.EnvConfig{
 		PageID: "123",
 		Token:  "321",
 	}
-	api := facebook.New(&cfg)
+
+	api := New(&cfg)
+	return api
+}
+
+// TestNewFacebook : test API instantiation
+func TestNewFacebook(t *testing.T) {
+
+	api := apiSetUp()
+
 	if api.MessageHandler != nil && api.PostbackHandler != nil {
-		t.Logf("Handler setup incorrect")
+		t.Errorf("Handler setup incorrect")
 	}
 	if api.PageID != "123" {
-		t.Logf("PageID was incorrect, got: %s, want: %s.", api.PageID, "123")
+		t.Errorf("PageID was incorrect, got: %s, want: %s.", api.PageID, "123")
 	}
 	if api.Token != "321" {
-		t.Logf("Token was incorrect, got: %s, want: %s.", api.Token, "321")
+		t.Errorf("Token was incorrect, got: %s, want: %s.", api.Token, "321")
 	}
 }
 
 // TestSendTextMessage : Test sending a text message under different API
 // conditions (ie when Facebook is online and offline)
-func TestSendTextMessage(t *testing.T) {
-	cfg := config.EnvConfig{
-		PageID: "123",
-		Token:  "321",
-	}
-	api := facebook.New(&cfg)
-
+func TestSendTextMessageAvailable(t *testing.T) {
 	/* Test when server ok: Should make request with correct parameters */
+
+	api := apiSetUp()
 
 	// Set up fake Facebook server
 	ts := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -57,7 +60,7 @@ func TestSendTextMessage(t *testing.T) {
 		if err != nil {
 			t.Errorf("Bad request body: " + err.Error())
 		}
-		msg := &facebook.Message{}
+		msg := &Message{}
 		err = json.Unmarshal(read, msg)
 		if err != nil {
 			t.Errorf("Bad message" + err.Error())
@@ -74,25 +77,29 @@ func TestSendTextMessage(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	// Set API to use fake server's URL and call SendTextMessage()
-	facebook.GraphAPI = ts.URL
+	// Set API to use fake server's URL and call SendTextMesssage
+	GraphAPI = ts.URL
 	err := api.SendTextMessage("789", "Hello")
 	if err != nil {
 		t.Errorf("Errored: " + err.Error())
 	}
+}
 
+func TestSendMessageUnavailable(t *testing.T) {
 	/* Test when server down: Should return an error */
 
+	api := apiSetUp()
+
 	// Set up a new fake server
-	ts = httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		// Return StatusServiceUnavailable when a request is made
 		rw.WriteHeader(http.StatusServiceUnavailable)
 	}))
 	defer ts.Close()
 
-	// Set API to use fake server's URL and call SendTextMessage()
-	facebook.GraphAPI = ts.URL
-	err = api.SendTextMessage("789", "Hello")
+	// Set API to use fake server's URL and call SendTextMesssage
+	GraphAPI = ts.URL
+	err := api.SendTextMessage("789", "Hello")
 	// Should return error
 	if err == nil {
 		t.Errorf("No error returned")
