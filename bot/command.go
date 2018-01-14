@@ -50,3 +50,16 @@ func (b *Bot) test(c *Context) error {
 	}
 	return b.api.SendQuickReplyTemplate(c.facebookID, "Are you hungry?", qr)
 }
+
+
+func (b *Bot) update(c *Context) error {
+	user, err := b.api.GetUserProfile(c.facebookID)
+	if err != nil {
+		return err
+	}
+	u := server.User{
+		ID:       c.facebookID,
+		Timezone: user.Timezone,
+	}
+	return b.server.AddUser(u)
+}
