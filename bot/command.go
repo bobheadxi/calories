@@ -61,5 +61,5 @@ func (b *Bot) update(c *Context) error {
 		ID:       c.facebookID,
 		Timezone: user.Timezone,
 	}
-	return b.server.AddUser(u)
+	return b.server.UpdateUserTimezone(u)
 }
