@@ -43,6 +43,7 @@ func New(api facebook.APILayer, sv server.ServerLayer) *Bot {
 	commands := map[string]Handler{
 		"help": b.help,
 		"test": b.test,
+		"update": b.update,
 	}
 	b.commands = commands
 
