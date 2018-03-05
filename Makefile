@@ -16,13 +16,11 @@ test-verbose:
 	go test $(PACKAGES) -v --cover
 
 deps:
-	glide install
+	go get -u github.com/golang/dep/cmd/dep
+	dep ensure
 
 clean: calories
 	rm -f calories
-
-glide:
-	sh scripts/install_glide.sh
 
 db:
 	sh scripts/create_db.sh

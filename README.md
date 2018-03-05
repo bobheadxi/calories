@@ -29,9 +29,7 @@ Now you can message your Facebook page to try out the bot. Note that until your 
 
 - `make` -> builds the project
 
-- `make glide` -> installs Glide without needing Homebrew etc
-
-- `make deps` -> installs project dependencies (via Glide)
+- `make deps` -> installs project dependencies
 
 - `make db` -> sets up local database shenanigans for testing
 
