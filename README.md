@@ -27,9 +27,17 @@ Now you can message your Facebook page to try out the bot. Note that until your 
 
 ### Development
 
-- `make` -> builds the project
+#### Dependencies
 
-- `make deps` -> installs project dependencies
+We use `dep` to manage our dependencies. To install dep and Calorie's dependencies:
+
+```bash
+go get -u github.com/golang/dep/cmd/dep
+dep ensure
+```
+
+#### Makefile
+- `make` -> builds the project
 
 - `make db` -> sets up local database shenanigans for testing
 

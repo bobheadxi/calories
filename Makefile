@@ -15,10 +15,6 @@ test-verbose:
 	make db
 	go test $(PACKAGES) -v --cover
 
-deps:
-	go get -u github.com/golang/dep/cmd/dep
-	dep ensure
-
 clean: calories
 	rm -f calories
 

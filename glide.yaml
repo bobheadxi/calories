@@ -1,3 +1,0 @@
-package: github.com/bobheadxi/calories
-import:
-- package: github.com/lib/pq

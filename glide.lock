@@ -1,8 +1,0 @@
-hash: 3e162c82baaeac8d4f207f50788268c3effc847bb2e658a30961662233f4f5f4
-updated: 2017-11-08T14:30:17.763159913-08:00
-imports:
-- name: github.com/lib/pq
-  version: b609790bd85edf8e9ab7e0f8912750a786177bcf
-  subpackages:
-  - oid
-testImports: []

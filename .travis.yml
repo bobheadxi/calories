@@ -1,17 +1,17 @@
 language: go
 
 go:
-  - 1.7
+  - "1.10"
 
 env:
   - TRAVIS=true PORT="8080" DATABASE_URL="postgresql://localhost" FB_TOKEN="123456" FB_PAGE_ID="6789"
 
 before_install:
   - go get github.com/mattn/goveralls
+  -	go get -u github.com/golang/dep/cmd/dep
 
 install:
-  - make glide
-  - make deps
+  - dep ensure
 
 services:
   - postgresql
