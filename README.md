@@ -1,5 +1,5 @@
 # calories
-[![Build Status](https://travis-ci.org/bobheadxi/calories.svg?branch=dev)](https://travis-ci.org/bobheadxi/calories) [![Coverage Status](https://coveralls.io/repos/github/bobheadxi/calories/badge.svg?branch=31-unit-tests)](https://coveralls.io/github/bobheadxi/calories?branch=31-unit-tests)
+[![Deployed with Inertia](https://img.shields.io/badge/Deploying%20with-Inertia-blue.svg)](https://github.com/ubclaunchpad/inertia) [![Build Status](https://travis-ci.org/bobheadxi/calories.svg?branch=dev)](https://travis-ci.org/bobheadxi/calories) [![Coverage Status](https://coveralls.io/repos/github/bobheadxi/calories/badge.svg?branch=31-unit-tests)](https://coveralls.io/github/bobheadxi/calories?branch=31-unit-tests)
 
 WIP
 

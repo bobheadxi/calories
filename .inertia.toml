@@ -1,0 +1,13 @@
+inertia = "test"
+project = "calories"
+
+[[remote]]
+  name = "local"
+  IP = "0.0.0.0"
+  user = "root"
+  pemfile = "/Users/robertlin/go/src/github.com/ubclaunchpad/inertia/test_env/test_key"
+  branch = "dev"
+  [remote.daemon]
+    port = "8081"
+    ssh_port = "22"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.qbr_f9C7i8FRCXSKDw1SnRCCoSjFNPsgVwm7nH4sS0Y"
