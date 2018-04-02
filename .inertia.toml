@@ -1,5 +1,6 @@
 inertia = "test"
-project = "calories"
+project-name = "calories"
+build-type = "herokuish"
 
 [[remote]]
   name = "local"
@@ -11,3 +12,4 @@ project = "calories"
     port = "8081"
     ssh_port = "22"
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.qbr_f9C7i8FRCXSKDw1SnRCCoSjFNPsgVwm7nH4sS0Y"
+    secret = "inertia"
