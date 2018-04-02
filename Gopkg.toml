@@ -4,5 +4,5 @@
 
 [metadata.heroku]
   root-package = "github.com/heroku/go-getting-started"
-  go-version = "1.8.3"
+  go-version = "1.10.1"
   install = [ "./..." ]
