@@ -44,7 +44,7 @@ func tokenizerHandler(c *Context) error {
 	return errors.New(c.content)
 }
 
-// fakeServer : an alternative to the real server for testing, implements ServerLayer
+// fakeServer is an alternative to the real server for testing, implements ServerLayer
 type fakeServer struct{}
 
 func (fs *fakeServer) AddUser(u server.User) error                  { return nil }
@@ -52,6 +52,7 @@ func (fs *fakeServer) AddEntry(e server.Entry) error                { return nil
 func (fs *fakeServer) GetUser(s string) (*server.User, error)       { return &server.User{}, nil }
 func (fs *fakeServer) GetEntries(s string) (*[]server.Entry, error) { return nil, errors.New("") }
 func (fs *fakeServer) SumCalories(s string) (int, error)            { return 0, nil }
+func (fs *fakeServer) UpdateUserTimezone(u server.User) error       { return nil }
 func (fs *fakeServer) GetUsersInTimezone(i int) (*map[*server.User]int, error) {
 	return nil, errors.New("")
 }
