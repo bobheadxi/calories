@@ -1,7 +1,0 @@
-package: github.com/bobheadxi/calories
-import:
-- package: github.com/lib/pq
-- package: github.com/jdkato/prose
-  version: ^1.1.0
-  subpackages:
-  - '...'

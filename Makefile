@@ -15,14 +15,8 @@ test-verbose:
 	make db
 	go test $(PACKAGES) -v --cover
 
-deps:
-	glide install
-
 clean: calories
 	rm -f calories
-
-glide:
-	sh scripts/install_glide.sh
 
 db:
 	sh scripts/create_db.sh

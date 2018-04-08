@@ -16,6 +16,7 @@ type ServerLayer interface {
 	GetUsersInTimezone(int) (*map[*User]int, error)
 	GetEntries(string) (*[]Entry, error)
 	SumCalories(string) (int, error)
+	UpdateUserTimezone(User) error
 }
 
 // Server : Contains the app's database and offers an
@@ -167,4 +168,18 @@ func (s *Server) SumCalories(id string) (int, error) {
 		}
 	}
 	return sum, nil
+}
+
+// UpdateUserTimezone updates the timezone value of the given user
+func (s *Server) UpdateUserTimezone(user User) error {
+	sqlStatement := `
+	UPDATE users
+   	SET timezone = $2
+	WHERE user_id = $1`
+	_, err := s.db.Exec(sqlStatement, user.ID, user.Timezone)
+	if err != nil {
+		log.Print("AddUser failed: " + err.Error())
+		return err
+	}
+	return nil
 }

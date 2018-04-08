@@ -1,5 +1,5 @@
 # calories
-[![Build Status](https://travis-ci.org/bobheadxi/calories.svg?branch=dev)](https://travis-ci.org/bobheadxi/calories) [![Coverage Status](https://coveralls.io/repos/github/bobheadxi/calories/badge.svg?branch=31-unit-tests)](https://coveralls.io/github/bobheadxi/calories?branch=31-unit-tests)
+[![Deployed with Inertia](https://img.shields.io/badge/Deploying%20with-Inertia-blue.svg)](https://github.com/ubclaunchpad/inertia) [![Build Status](https://travis-ci.org/bobheadxi/calories.svg?branch=dev)](https://travis-ci.org/bobheadxi/calories) [![Coverage Status](https://coveralls.io/repos/github/bobheadxi/calories/badge.svg?branch=31-unit-tests)](https://coveralls.io/github/bobheadxi/calories?branch=31-unit-tests)
 
 WIP
 
@@ -27,11 +27,17 @@ Now you can message your Facebook page to try out the bot. Note that until your 
 
 ### Development
 
+#### Dependencies
+
+We use `dep` to manage our dependencies. To install dep and Calorie's dependencies:
+
+```bash
+go get -u github.com/golang/dep/cmd/dep
+dep ensure
+```
+
+#### Makefile
 - `make` -> builds the project
-
-- `make glide` -> installs Glide without needing Homebrew etc
-
-- `make deps` -> installs project dependencies (via Glide)
 
 - `make db` -> sets up local database shenanigans for testing
 

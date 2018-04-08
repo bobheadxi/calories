@@ -1,24 +1,28 @@
 language: go
 
 go:
-  - 1.7
+  - "1.10"
 
 env:
   - TRAVIS=true PORT="8080" DATABASE_URL="postgresql://localhost" FB_TOKEN="123456" FB_PAGE_ID="6789"
 
+# Install dependencies
 before_install:
   - go get github.com/mattn/goveralls
+  - go get -u github.com/golang/dep/cmd/dep
 
 install:
-  - make glide
-  - make deps
+  - dep ensure
 
 services:
   - postgresql
 
+# Set up instrumented test environment
 before_script:
   - psql -c 'create database test_db;' -U postgres
   - psql -d test_db -a -f ./scripts/test_db_setup.sql
 
+# Run tests and report coverage to coveralls
 script:
-  - $HOME/gopath/bin/goveralls -service=travis-ci
+  - go test -v -race -coverprofile=coverage.out ./...
+  - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci
